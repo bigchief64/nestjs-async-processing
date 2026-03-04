@@ -6,6 +6,9 @@ Many backend services initially perform expensive work directly inside API handl
 
 This example shows how to safely process long-running work using **NestJS and Redis-backed job processing** while protecting the system from common failure scenarios.
 
+This demo intentionally avoids complex frameworks to highlight
+the core reliability patterns.
+
 ---
 
 ## Architecture Overview
@@ -150,3 +153,21 @@ Example payload:
   "scenario": "retry"
 }
 ```
+
+## Design Decisions
+
+This project intentionally keeps the worker state in memory rather than
+a persistent datastore to keep the example minimal.
+
+In a production system this state would typically live in Redis or a
+database so workers could restart safely without losing job status.
+
+Retries are capped to prevent retry storms, which can occur when
+external dependencies are unavailable for extended periods.
+
+## Possible Extensions
+
+• Persist job status in Redis or a database
+• Add job metrics and monitoring
+• Introduce circuit breaker logic for external dependencies
+• Support horizontal worker scaling
